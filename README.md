@@ -111,6 +111,19 @@ pip3 install -r requirements.txt
 mkdir -p outputs static
 ```
 
+
+### Installation via Docker (Alternative)
+
+1. Copy (and maybe edit) the environment file:
+```bash
+cp .env.example .env
+```
+
+2. Run docker compose:
+```bash
+docker compose up
+```
+
 ### Starting the Server
 
 Run the FastAPI server:
