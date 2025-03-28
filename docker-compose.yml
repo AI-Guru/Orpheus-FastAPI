@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  orpheus-fastapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: orpheus-fastapi
+    ports:
+      - "5005:5005"
+    volumes:
+      - ./outputs:/app/outputs
+      - ./.env:/app/.env
+    environment:
+      - ORPHEUS_HOST=0.0.0.0
+      - ORPHEUS_PORT=5005
+    restart: unless-stopped
+    networks:
+      - orpheus-network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+networks:
+  orpheus-network:
+    driver: bridge
