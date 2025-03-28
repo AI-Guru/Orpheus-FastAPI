@@ -10,8 +10,11 @@ RUN apt-get update || true && \
 # Update apt sources with retry
 RUN for i in $(seq 1 3); do apt-get update -y && break || sleep 5; done
 
-# Install system dependencies
+# Install system dependencies including build essentials for wheel building
 RUN apt-get install -y --no-install-recommends \
+    build-essential \
+    gcc \
+    python3-dev \
     libasound2-dev \
     libportaudio2 \
     libsndfile1 \
