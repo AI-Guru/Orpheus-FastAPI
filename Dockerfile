@@ -2,18 +2,21 @@ FROM pytorch/pytorch:2.6.0-cuda12.4-cudnn9-runtime
 
 WORKDIR /app
 
-# Fix for GPG key issues
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3B4FE6ACC0B21F32 871920D1991BC93C && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    apt-get update --fix-missing
+# First install gnupg
+RUN apt-get update || true && \
+    apt-get install -y --no-install-recommends gnupg && \
+    apt-get clean || true
+
+# Update apt sources with retry
+RUN for i in $(seq 1 3); do apt-get update -y && break || sleep 5; done
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get install -y --no-install-recommends \
     libasound2-dev \
     libportaudio2 \
     libsndfile1 \
     git \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
